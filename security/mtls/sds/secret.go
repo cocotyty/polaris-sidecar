@@ -16,14 +16,13 @@ import (
 // cryptombSupported indicate that whether the cpu can use crypto_mb library.
 // The crypto_mb library can accelerate tls in envoy by using AVX512 instructions.
 // So we should check the CPUID here.
-var cryptombSupported = cpuid.EnabledAVX512 && cpuid.HasFeature(
-	cpuid.BMI2&
-		cpuid.AVX512F&
-		cpuid.AVX512DQ&
-		cpuid.AVX512BW&
-		cpuid.AVX512IFMA&
-		cpuid.AVX512VBMI2,
-)
+var cryptombSupported = cpuid.EnabledAVX512 &&
+	cpuid.HasExtendedFeature(cpuid.BMI2) &&
+	cpuid.HasExtendedFeature(cpuid.AVX512F) &&
+	cpuid.HasExtendedFeature(cpuid.AVX512DQ) &&
+	cpuid.HasExtendedFeature(cpuid.AVX512BW) &&
+	cpuid.HasExtendedFeature(cpuid.AVX512IFMA) &&
+	cpuid.HasExtendedFeature(cpuid.AVX512VBMI2)
 
 // makeSecrets make all secrets which should be pushed to envoy.
 // For now, just ROOTCA & default.
